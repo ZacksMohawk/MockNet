@@ -1,0 +1,23 @@
+{
+  "name": "mocknet",
+  "version": "1.0.0",
+  "main": "MockNet.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Zack's Mohawk Limited",
+  "license": "ISC",
+  "description": "## Overview",
+  "dependencies": {
+    "prompt-sync": "^4.2.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ZacksMohawk/MockNet.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ZacksMohawk/MockNet/issues"
+  },
+  "homepage": "https://github.com/ZacksMohawk/MockNet#readme"
+}

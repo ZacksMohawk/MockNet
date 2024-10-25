@@ -1,0 +1,8 @@
+.DS_Store
+node_modules/
+*.log
+nohup.out
+
+mocknet.status.json
+mock.def.json
+hosts.bak
