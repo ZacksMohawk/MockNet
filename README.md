@@ -25,4 +25,6 @@ For Linux machines, run the following setup script. Windows script may be coming
 
 ## How To Run
 
-	node MockNet
+From any folder:
+
+	mocknet
