@@ -17,15 +17,17 @@ let mocknetStatusFile = 'mocknet.status.json';
 let mocknetStatus = {
 	"mocking" : false
 };
-let mockDefinitionFile = 'mock.def.json';
+let mockDefinitionFilePath = 'mock.def.json';
 let mockDefinitionData;
 
-if (!fs.existsSync(mockDefinitionFile)){
-	Logger.log("No mock definition file found - please create mock.def.json and retry. Exiting.");
-	process.exit(0);
+// TODO Check for mock.def.json file in current folder first, and use that if exists
+if (!fs.existsSync(mockDefinitionFilePath)){
+	Logger.log("** No mock.def.json file present - please create one **");
+	Logger.log("Defaulting to example.mock.def.json for demonstration purposes");
+	mockDefinitionFilePath = 'example.mock.def.json';
 }
 try {
-	mockDefinitionData = JSON.parse(fs.readFileSync(mockDefinitionFile, 'utf-8'));
+	mockDefinitionData = JSON.parse(fs.readFileSync(mockDefinitionFilePath, 'utf-8'));
 }
 catch (error){
 	Logger.log("Error whilst parsing mock definition file. Aborting");
@@ -89,6 +91,7 @@ else {
 	let mockChoiceKey = mockNameArray[mockChoiceIndex - 1];
 
 	let mockSet = mockDefinitionData[mockChoiceKey];
+	let mockSetRedirects = mockSet.redirects;
 
 	let hostsFileContent = fs.readFileSync(hostsFilePath, 'utf-8');
 
@@ -102,10 +105,10 @@ else {
 	execSync('sudo chown $(whoami) ' + hostsFilePath);
 
 	// apply the redirects
-	for (let index = 0; index < mockSet.length; index++){
-		let mockSetEntry = mockSet[index];
-		Logger.log(mockSetEntry.source + " 👉 " + mockSetEntry.target);
-		hostsFileContent += "\n" + mockSetEntry.target + "\t" + mockSetEntry.source;
+	for (let index = 0; index < mockSetRedirects.length; index++){
+		let mockSetRedirect = mockSetRedirects[index];
+		Logger.log(mockSetRedirect.source + " 👉 " + mockSetRedirect.target);
+		hostsFileContent += "\n" + mockSetRedirect.target + "\t" + mockSetRedirect.source;
 	}
 	Logger.log("Updating hosts file with mocking applied\n");
 	fs.writeFileSync(hostsFilePath, hostsFileContent);
@@ -118,7 +121,27 @@ else {
 	mocknetStatus.name = mockChoiceKey;
 	saveMockNetStatus();
 
+	if (mockSet.servers){
+		for (let serverIndex = 0; serverIndex < mockSet.servers.length; serverIndex++){
+			let serverEntry = mockSet.servers[serverIndex];
+			startServer(serverEntry.port, serverEntry.server);
+		}
+	}
+
 	Logger.log("🟢 Mocking: ON\n");
+}
+
+function startServer(port, server){
+	Logger.log("Starting mock server on port: " + port);
+	let serverConfigPath = "tmp." + Math.random() * 100000 + ".config.json";
+	fs.writeFileSync(serverConfigPath, JSON.stringify(server));
+	let startServerString = '#!/bin/bash\n\nnohup node MockNetServer.js -port ' + port + ' -serverConfigPath "' + serverConfigPath + '" &';
+	fs.writeFileSync('startServer.sh', startServerString);
+	var spawn = require('child_process').spawn;
+	spawn('bash', ['startServer.sh'], {
+	    stdio: 'ignore',
+	    detached: true
+	}).unref();
 }
 
 function showMockStatus(){
@@ -131,10 +154,11 @@ function showMockStatus(){
 		Logger.log("Active mock set: " + mocknetStatus.name + "\n");
 
 		let mockSet = mockDefinitionData[mocknetStatus.name];
+		let mockSetRedirects = mockSet.redirects;
 
-		for (let index = 0; index < mockSet.length; index++){
-			let mockSetEntry = mockSet[index];
-			Logger.log(mockSetEntry.source + " 👉 " + mockSetEntry.target);
+		for (let index = 0; index < mockSetRedirects.length; index++){
+			let mockSetRedirect = mockSetRedirects[index];
+			Logger.log(mockSetRedirect.source + " 👉 " + mockSetRedirect.target);
 		}
 		Logger.log();
 	}
@@ -150,6 +174,7 @@ function disableMocking(){
 	fs.unlinkSync(backupFilePath);
 	mocknetStatus.mocking = false;
 	saveMockNetStatus();
+	execSync('pkill -f MockNetServer.js');
 	Logger.log("🔴 Mocking: OFF\n");
 }
 

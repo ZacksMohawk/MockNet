@@ -1,0 +1,104 @@
+{
+	"My Server" : {
+		"redirects" : [
+			{
+				"source" : "my.server",
+				"target" : "127.0.0.1"
+			}
+		],
+		"servers" : [
+			{
+				"port" : 8888,
+				"server" : {
+					"my.server" : {
+						"GET" : {
+							"/" : {
+								"body" : "Homepage!",
+								"code" : 200
+							},
+							"/user" : {
+								"input" : [
+									{
+										"expected" : {
+											"user" : "Jeff"
+										},
+										"response" : {
+											"body" : "Jeff's data",
+											"code" : 200
+										}
+									}
+								],
+								"default" : {
+									"body" : "User not found",
+									"code" : 404
+								}
+							},
+							"default" : {
+								"body" : "Not found",
+								"code" : 404
+							}
+						},
+						"POST" : {
+							"/" : {
+								"body" : "Homepage post!",
+								"code" : 200
+							},
+							"/login" : {
+								"input" : [
+									{
+										"expected" : {
+											"username" : "Jeff",
+											"password" : "Hello"
+										},
+										"response" : {
+											"body" : "Login successful",
+											"code" : 200
+										}
+									}
+								],
+								"default" : {
+									"body" : "Unauthorised",
+									"code" : 401
+								}
+							},
+							"default" : {
+								"body" : "Not found post",
+								"code" : 404
+							}
+						}
+					},
+					"*" : {
+						"GET" : {
+							"/" : {
+								"body" : "* Homepage",
+								"code" : 200
+							},
+							"/test" : {
+								"body" : "* Test",
+								"code" : 200
+							},
+							"default" : {
+								"body" : "* Not found",
+								"code" : 404
+							}
+						},
+						"POST" : {
+							"/" : {
+								"body" : "* Homepage",
+								"code" : 200
+							},
+							"/test" : {
+								"body" : "* Test",
+								"code" : 200
+							},
+							"default" : {
+								"body" : "* Not found",
+								"code" : 404
+							}
+						}
+					}
+				}
+			}
+		]
+	}
+}
