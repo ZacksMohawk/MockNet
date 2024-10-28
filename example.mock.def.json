@@ -28,6 +28,17 @@
 										}
 									}
 								],
+								"headers" : [
+									{
+										"expected" :{
+											"sessionToken" : "Xjd7jBFlk09Sgj-3kGkadfg43@fdG-VGahs"
+										},
+										"default" : {
+											"body" : "Invalid session",
+											"code" : 401
+										}
+									}
+								],
 								"default" : {
 									"body" : "User not found",
 									"code" : 404
@@ -51,7 +62,7 @@
 											"password" : "Hello"
 										},
 										"response" : {
-											"body" : "Login successful",
+											"body" : "Xjd7jBFlk09Sgj-3kGkadfg43@fdG-VGahs",
 											"code" : 200
 										}
 									}

@@ -189,6 +189,39 @@ function getSpecificResponse(req, method){
 		};
 	}
 
+	if (specificResponse.headers){
+		let headersArray = specificResponse.headers;
+		for (let index = 0; index < headersArray.length; index++){
+			let header = headersArray[index];
+			let expectedHeaders = header.expected;
+
+			let headerValid = true;
+
+			let expectedHeaderKeys = Object.keys(expectedHeaders);
+			for (let headerIndex = 0; headerIndex < expectedHeaderKeys.length; headerIndex++){
+				let expectedHeaderKey = expectedHeaderKeys[headerIndex];
+
+				let actualHeaderValue = req.headers[expectedHeaderKey.toLowerCase()];
+				if (!actualHeaderValue || actualHeaderValue != expectedHeaders[expectedHeaderKey]){
+					headerValid = false;
+					break;
+				}
+			}
+			if (headerValid){
+				// only return response if one is specified, otherwise let code continue to check specificResponse.input
+				if (header.response){
+					return header.response;
+				}
+			}
+			else {
+				// if default response specified, then return here, otherwise let code continue
+				if (header.default){
+					return header.default;
+				}
+			}
+		}
+	}
+
 	if (specificResponse.input){
 		let processedInputParams = getProcessedInputParams(req, method);
 		let inputsArray = specificResponse.input;
