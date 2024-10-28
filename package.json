@@ -9,9 +9,9 @@
   "license": "ISC",
   "description": "## Overview",
   "dependencies": {
-    "prompt-sync": "^4.2.0"
+    "prompt-sync": "^4.2.0",
+    "properties-reader": "^2.3.0"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/ZacksMohawk/MockNet.git"
@@ -19,5 +19,6 @@
   "bugs": {
     "url": "https://github.com/ZacksMohawk/MockNet/issues"
   },
-  "homepage": "https://github.com/ZacksMohawk/MockNet#readme"
+  "homepage": "https://github.com/ZacksMohawk/MockNet#readme",
+  "devDependencies": {}
 }
