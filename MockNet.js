@@ -83,7 +83,7 @@ if (mocknetStatus.mocking){
 		Logger.log("Missing backup hosts file, but mocking is active. Aborting.");
 	}
 
-	showMockStatus();
+	showMockStatus(true);
 
 	let disableMockingChoice = prompt("Disable mocking (y/n)?: ");
 	if (disableMockingChoice != null && disableMockingChoice.toLowerCase().trim() == ("y")){
@@ -96,7 +96,9 @@ else {
 		process.exit(0);
 	}
 
-	Logger.log("\nPlease choose mock set to apply\n");
+	showMockStatus(false);
+
+	Logger.log("Please choose mock set to apply\n");
 
 	let mockNameArray = Object.keys(mockDefinitionData);
 	for (let index = 0; index < mockNameArray.length; index++){
@@ -170,23 +172,28 @@ function startServer(port, server){
 	}).unref();
 }
 
-function showMockStatus(){
-	if (!mocknetStatus.name){
-		Logger.log("\n🟡 Mocking: ON\n");
-		Logger.log("No mock name found, cannot display mock status\n");
+function showMockStatus(mockingActive){
+	if (mockingActive){
+		if (!mocknetStatus.name){
+			Logger.log("\n🟡 Mocking: ON\n");
+			Logger.log("No mock name found, cannot display mock status\n");
+		}
+		else {
+			Logger.log("\n🟢 Mocking: ON\n");
+			Logger.log("Active mock set: " + mocknetStatus.name + "\n");
+
+			let mockSet = mockDefinitionData[mocknetStatus.name];
+			let mockSetRedirects = mockSet.redirects;
+
+			for (let index = 0; index < mockSetRedirects.length; index++){
+				let mockSetRedirect = mockSetRedirects[index];
+				Logger.log("\t" + mockSetRedirect.source + " 👉 " + mockSetRedirect.target);
+			}
+			Logger.log();
+		}
 	}
 	else {
-		Logger.log("\n🟢 Mocking: ON\n");
-		Logger.log("Active mock set: " + mocknetStatus.name + "\n");
-
-		let mockSet = mockDefinitionData[mocknetStatus.name];
-		let mockSetRedirects = mockSet.redirects;
-
-		for (let index = 0; index < mockSetRedirects.length; index++){
-			let mockSetRedirect = mockSetRedirects[index];
-			Logger.log("\t" + mockSetRedirect.source + " 👉 " + mockSetRedirect.target);
-		}
-		Logger.log();
+		Logger.log("\n🛑 Mocking: OFF\n");
 	}
 }
 
