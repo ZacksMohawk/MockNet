@@ -13,7 +13,7 @@ const Logger = require('./includes/Logger');
 const defaultPort = 3000;
 
 Logger.log();
-Logger.log(fs.readFileSync('ServerAppLogo.txt', 'utf8').replace('[version]', 'MockNetServer v' + version));
+Logger.log(fs.readFileSync('ServerAppLogo.txt', 'utf8').replace('[version]', 'MockNetServer v' + version), "FgCyan");
 Logger.log();
 
 /**

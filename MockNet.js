@@ -8,7 +8,7 @@ const { execSync } = require("child_process");
 const Logger = require('./includes/Logger');
 
 Logger.log();
-Logger.log(fs.readFileSync('AppLogo.txt', 'utf8').replace('[version]', 'MockNet v' + version));
+Logger.log(fs.readFileSync('AppLogo.txt', 'utf8').replace('[version]', 'MockNet v' + version), "FgMagenta");
 Logger.log();
 
 let hostsFilePath = '/etc/hosts';
